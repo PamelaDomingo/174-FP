@@ -4,6 +4,18 @@ import re
 import os
 
 
+def saveToSheet(cplates):
+    pass
+
+def chooseRead(pscans):
+    cln_plates = []
+    for s in pscans:
+        if len(s) == 1:
+            cln_plates.append(s[0])
+        elif len(s) > 1:
+            cln_plates.append(s[1])
+    print("++++++++++++++ CLEANED PLATES ++++++++++++++")
+    print(cln_plates)
 
 def scanPlate():
     haarcascade = "model\haarcascade_russian_plate_number.xml"
@@ -44,8 +56,11 @@ def scanPlate():
             cv2.putText(img, "Plate Saved", (150,265), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (0,0,255), 2)
             cv2.imshow("Results", img)
             cv2.waitKey(1)
+            cv2.destroyWindow("Results")
             count += 1
-            # break
+        # terminate scan
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
 def readPlate():
     img_path = "plates/"
@@ -63,7 +78,8 @@ def readPlate():
         output = reader.readtext(img_path + p)
         outs = []
         for i in output:
-            outs.append(i[-2])
+            cln = re.sub(r"\W+", "", i[-2])
+            outs.append(cln)
         # cord = output[1][-2]        # take only the second line/read in the plate
         # result = re.sub(r"\W+", "", cord)
         # plates.append(result)
@@ -73,14 +89,11 @@ def readPlate():
     print("======= PLATE SCANS =======")
     print(plate_scans)
 
+    chooseRead(plate_scans)
 
-while True:
-    user_input = input("\nstop [y/n]: ")
-    if  user_input == "y":
-        break
 
-    # scanPlate()
-    readPlate()
+scanPlate()
+# readPlate()
 
 
 
