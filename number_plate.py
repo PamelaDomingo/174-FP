@@ -37,5 +37,3 @@ while True:
         cv2.imshow("Results", img)
         cv2.waitKey(500)
         count += 1
-    elif cv2.waitKey(1) & 0xFF == ord('q'):
-        break
